@@ -1,0 +1,24 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "> Node.js + Express + Socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheMeekrok/tic-tac-toe-task.git"
+  },
+  "author": "Kurpas Artyom, Alexander Kokanov, Matvey Serbinovich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheMeekrok/tic-tac-toe-task/issues"
+  },
+  "homepage": "https://github.com/TheMeekrok/tic-tac-toe-task#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4"
+  }
+}
