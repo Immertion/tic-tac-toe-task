@@ -7,19 +7,24 @@ var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
 
-app.set('port', 5000);
+// Настройки сервера
+const settings = require('./settings.js');
+
+app.set('port', settings.serverPort);
 app.use('/static', express.static(__dirname + '/static'));
 
-app.use(
-    express.static(path.join(__dirname, "node_modules/bootstrap/dist/"))
-);
-
 // Маршруты
-app.get('/', function(request, response) {
-    response.sendFile(path.join(__dirname, 'index.html'));
+app.get('/', (request, response) => {
+    response.sendFile(path.join(__dirname, './static/index.html'));
 });
 
 // Запуск сервера
-server.listen(5000, function() {
+server.listen(5000, settings.serverIP, () => {
     console.log('Запускаю сервер на порте 5000');
+});
+
+var players = {};
+
+io.on("connection", (socket) => {
+    console.log(socket.id);
 });

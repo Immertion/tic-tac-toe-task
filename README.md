@@ -4,11 +4,12 @@ Node.js + Express + Socket.io
 ## Установка
 ```
 npm i --save express socket.io
+npm install --save-dev nodemon 
 ```
 
 ## Запуск сервера
 ```
-node index.js
+npm run server
 ```
 
 ## Функционал
