@@ -25,26 +25,45 @@
             top: 0;
             left: 0;
             z-index: 100;
+            width: 100vw;
+            height: 100vh;
         }
         .modal-background {
+            position: absolute;
+            top: 0;
+            left: 0;
             background: #000000;
+            opacity: .4;
+            width: 100vw;
+            height: 100vh;
+        }
+        .modal-window-main {
+            width: 400px;
+            height: 200px;
+            background: #FFFFFF;
+            position: relative;
+            z-index: 101;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="modal-window">
-        <div class="modal-background"></div>
+    <div class="modal-window flex space-around center disabled" id="modalWindow">
+        <div class="modal-window-main flex space-around center">
+            <input class="block" type="text" id="inputRoomNameModal" placeholder="введите имя"/>
+            <button class="shadow block" id="connectToRoomModal">подключение</button>
+        </div>
+        <div class="modal-background" id="modalBackground"></div>
     </div>
     <div class="flex wrapper column space-around">
         <h1 class="text-center bloom">крестики-нолики</h1>
         <div class="flex space-around wrapper-100" id="userProfile">
             <div class="buttons flex column space-around">
-                <input class="block" type="text" name="inputPlayerName" id="inputPlayerName" placeholder="введите имя"/>
+                <input class="block" type="text" id="inputPlayerName" placeholder="введите имя"/>
                 <button class="shadow block" id="createRoom">создать комнату</button>
-                <button class="shadow block" id="findRoom">найти комнату</button>
+                <button class="shadow block" id="connectToRoom">найти комнату</button>
             </div>
             <div class="info flex column">
-                <h2 class="bloom" id="helloMessage"></h2>
                 <table>
                     <tr>
                         <td><h4 class="yellow-undlerline bloom margin-10">всего игр</h4></td>
@@ -67,9 +86,57 @@
         </div>
         <div class="space-50"></div>
         <script>
+            socket = io();
+
+            $(document).ready(function () {
+                $('#modalWindow').hide();
+                $('#modalWindow').removeClass('disabled');
+            });
+
+            $('#connectToRoom').click(function (e) {
+                e.preventDefault();
+                $('#modalWindow').show(500);
+            });
+
+            $('#modalBackground').click(function (e) {
+                e.preventDefault();
+                $('#modalWindow').hide(500);
+            });
+
+            function addPlayerToRoom(roomName, playerName) {
+                roomObj = {roomName: roomName, playerName: playerName};
+                socket.emit('addPlayerToRoom', roomObj);
+
+                let roomExists = true;
+                socket.once('roomExists', (response) => {
+                    console.log(response);
+                    roomExists = response;
+                });
+
+                return roomExists;
+            }
+
+            $('#connectToRoomModal').click(function (e) { 
+                e.preventDefault();
+                const roomName = $('#inputRoomNameModal').val();
+                const playerName = $('#inputPlayerName').val();
+
+                let response = addPlayerToRoom(roomName, playerName)
+                
+                if (!response) {
+                    alert('неверное имя комнаты');
+                    return;
+                }
+
+                // return location.href = '/game?id=' + roomName;
+            });
+
             $('#createRoom').click(function (e) { 
                 e.preventDefault();
                 const playerName = $('#inputPlayerName').val();
+
+                socket.emit('createRoom', playerName);
+
                 return location.href = '/game?id=' + playerName;
             });
         </script>
