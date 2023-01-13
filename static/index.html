@@ -19,8 +19,12 @@
 <body>
     <div class="flex wrapper column space-around">
         <h1 class="text-center bloom">крестики-нолики</h1>
-        <h2 class="text-center bloom" id="signUpMessage">чтобы играть <a>войдите</a> или <a>зарегистируйтесь</a></h2>
-        <div class="flex space-around wrapper-100 disabled" id="userProfile">
+        <div class="flex space-around wrapper-100" id="userProfile">
+            <div class="buttons flex column space-around">
+                <input class="block" type="text" name="inputPlayerName" id="inputPlayerName" placeholder="введите имя"/>
+                <button class="shadow block" id="createRoom">создать комнату</button>
+                <button class="shadow block" id="findRoom">найти комнату</button>
+            </div>
             <div class="info flex column">
                 <h2 class="bloom" id="helloMessage"></h2>
                 <table>
@@ -42,33 +46,14 @@
                     </tr>
                 </table>
             </div>
-            <div class="buttons flex column space-around">
-                <button class="shadow">создать комнату</button>
-                <button class="shadow">найти комнату</button>
-            </div>
-        </div>
-        <!-- Игровое поле -->
-        <div class="flex column center game disabled">
-            <table>
-                <tr>
-                    <td><img src="./static/images/cross.svg"/></td>
-                    <td><img src="./static/images/cross.svg"/></td>
-                    <td><img src="./static/images/o.svg"/></td>
-                </tr>
-                <tr>
-                    <td><img src="./static/images/cross.svg"/></td>
-                    <td><img src="./static/images/o.svg"/></td>
-                    <td><img src="./static/images/o.svg"/></td>
-                </tr>
-                <tr>
-                    <td><img src="./static/images/o.svg"/></td>
-                    <td><img src="./static/images/cross.svg"/></td>
-                    <td><img src="./static/images/cross.svg"/></td>
-                </tr>
-            </table>
         </div>
         <div class="space-50"></div>
-        <script src="./static/scripts/gameHandler.js"></script>
+        <script>
+            $('#createRoom').click(function (e) { 
+                e.preventDefault();
+                return location.href = '/game&id=test';
+            });
+        </script>
     </div>
 </body>
 </html>

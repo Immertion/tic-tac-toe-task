@@ -17,6 +17,9 @@ app.use('/static', express.static(__dirname + '/static'));
 app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, './static/index.html'));
 });
+app.get('/game', (request, response) => {
+    response.sendFile(path.join(__dirname, './static/routes/game.html'));
+});
 
 // Запуск сервера
 server.listen(5000, settings.serverIP, () => {

@@ -47,6 +47,20 @@ img {
     height: 7vw;
 }
 
+input {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 30px;
+    border: 0;
+    padding: 15px;
+    transition: 500ms;
+}
+
+input:focus{
+    outline: none;
+}
+
 button {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
@@ -61,6 +75,10 @@ button {
 
 button:hover {
     background: #4600dd;
+}
+
+.block {
+    margin: 10px;
 }
 
 .flex {
