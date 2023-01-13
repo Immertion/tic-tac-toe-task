@@ -15,8 +15,26 @@
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 
     <title>Крестики-нолики</title>
+
+    <style>
+        .margin-10 {
+            margin: 10px;
+        }
+        .modal-window {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .modal-background {
+            background: #000000;
+        }
+    </style>
 </head>
 <body>
+    <div class="modal-window">
+        <div class="modal-background"></div>
+    </div>
     <div class="flex wrapper column space-around">
         <h1 class="text-center bloom">крестики-нолики</h1>
         <div class="flex space-around wrapper-100" id="userProfile">
@@ -29,20 +47,20 @@
                 <h2 class="bloom" id="helloMessage"></h2>
                 <table>
                     <tr>
-                        <td><h4 class="yellow-undlerline bloom">всего игр</h4></td>
-                        <td><h4 class="yellow-undlerline bloom">0</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">всего игр</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
                     </tr>
                     <tr>
-                        <td><h4 class="yellow-undlerline bloom">побед</h4></td>
-                        <td><h4 class="yellow-undlerline bloom">0</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">побед</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
                     </tr>
                     <tr>
-                        <td><h4 class="yellow-undlerline bloom">поражений</h4></td>
-                        <td><h4 class="yellow-undlerline bloom">0</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">поражений</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
                     </tr>
                     <tr>
-                        <td><h4 class="yellow-undlerline bloom">ничьих</h4></td>
-                        <td><h4 class="yellow-undlerline bloom">0</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">ничьих</h4></td>
+                        <td><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
                     </tr>
                 </table>
             </div>
@@ -51,7 +69,8 @@
         <script>
             $('#createRoom').click(function (e) { 
                 e.preventDefault();
-                return location.href = '/game&id=test';
+                const playerName = $('#inputPlayerName').val();
+                return location.href = '/game?id=' + playerName;
             });
         </script>
     </div>
