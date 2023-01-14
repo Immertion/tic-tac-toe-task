@@ -43,6 +43,7 @@ $('#createRoom').click(function (e) {
             [0, 0, 0],
         ],
         currentTurn: true,
+        moves: 0,
     };
 
     socket.emit('createRoom', room);
