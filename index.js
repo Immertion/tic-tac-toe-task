@@ -1,6 +1,5 @@
 // Зависимости
 const express = require('express');
-const { query } = require('express');
 
 const http = require('http');
 const path = require('path');
@@ -16,20 +15,11 @@ const settings = require('./settings.js');
 app.set('port', settings.serverPort);
 app.use('/static', express.static(__dirname + '/static'));
 
-// Комнаты
-let rooms = [];
-
 // Маршруты
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './static/index.html'));
 });
 app.get('/game', (req, res) => {
-    // Перенаправление на главную страницу, в случае,
-    // если такого id нет
-    // if(!rooms.includes(req.query['id'])) {
-    //     res.redirect('/');
-    // }
-
     res.sendFile(path.join(__dirname, './static/routes/game.html'));
 });
 
@@ -38,29 +28,30 @@ server.listen(5000, settings.serverIP, () => {
     console.log('Запускаю сервер на порте 5000');
 });
 
+rooms = [];
+
 io.on('connection', (socket) => {
-    socket.on('createRoom', (roomName) => {
-        roomObj = {roomName: roomName, playerName: undefined};
-        rooms.push(roomObj);
-        console.log(rooms);
-    });
+    socket.on('createRoom', (room) => {
+        rooms.push(room);
+        socket.join(room.name);
+    }) 
 
-    socket.on('findRoom', (roomName) => {
-        let response = true;
-        // if (rooms.find(element => element === roomName)) {
-        //     response = true;
-        // }
-        
-        socket.emit('roomExists', response);
-    });
+    socket.on('joinRoom', (room) => {
+        const foundRoom = rooms.filter(element => element.name === room.name);
+        if (foundRoom.length !== 0) {
+            foundRoom[0].players.push(room.player);
 
-    socket.on('addPlayerToRoom', (roomObj) => {
-        if (!rooms.find(element => element[roomName])) {
-            socket.emit('roomExists', false);
-            return;
+            socket.join(room.name);
+
+            if (foundRoom[0].players.length === 2) {
+                let changedRoom = foundRoom;
+                changedRoom[0].status = 'ready';
+
+                io.to(room.name).emit('roomStatus', changedRoom);
+            }
         }
-
-        rooms.find(element => element = roomObj.roomName)['playerName'] = roomObj.playerName;
-        console.log(rooms);
-    })
+        else {
+            console.log('error');
+        }
+    }) 
 });

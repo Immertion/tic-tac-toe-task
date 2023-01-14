@@ -55,7 +55,16 @@
             </div>
         </div>
         <div class="space-50"></div>
-        <script src="./static/scripts/gameHandler.js"></script>
+        <script>
+            socket = io();
+            
+            // socket.emit('roomDataByName', roomName);
+
+            socket.once('roomData', (roomData) => {
+                console.log(roomData);
+            })
+
+        </script>
     </div>
 </body>
 </html>

@@ -32,6 +32,10 @@ h1 {
     text-shadow: 1px 1px 15px #383838
 }
 
+.black {
+    color: #000000;
+}
+ 
 .yellow-undlerline {
     text-decoration: underline;
     text-shadow: 1px 1px 15px #EBD723;
