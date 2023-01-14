@@ -30,13 +30,16 @@ $('#createRoom').click(function (e) {
     room = {
         name: playerName + '',
         players: [
-            playerName,
+            {
+                name: playerName,
+                id: undefined,
+            }
         ],
         status: 'idle',
         board: [
-            ['x', '_', 'o'], 
-            ['o', 'x', 'o'],
-            ['_', 'o', 'x'],
+            ['_', '_', '_'], 
+            ['_', '_', '_'],
+            ['_', '_', '_'],
         ],
     };
 
@@ -63,8 +66,8 @@ function prepareRoom(room) {
     $('#modalWindow').hide(500);
     $('#playMenu').hide(500);
 
-    $('#firstPlayerName').html(room[0].players[0] + ' (X)');
-    $('#secondPlayerName').html(room[0].players[1] + ' (O)');
+    $('#firstPlayerName').html(room[0].players[0].name + ' (X)');
+    $('#secondPlayerName').html(room[0].players[1].name + ' (O)');
     
     $('#gameInfo').show(500);
     $('#gameCanvas').show();
@@ -89,11 +92,8 @@ $('.game-cell').click(function (e) {
 
 
 socket.on('updateBoardClient', room => {
-
     const pathImg = 'static/images/';
     const formatImg = '.png';
-
-    console.log(room);
     
     for (let i = 1; i <= 3; i++){
         for (let j = 1; j <= 3; j++){
@@ -101,7 +101,6 @@ socket.on('updateBoardClient', room => {
             img.classList.add('game-icon');
             if (room[0].board[i - 1][j - 1] === '_'){
                 img.src = pathImg + 'dot' + formatImg;
-
             }
             else if( room[0].board[i - 1][j - 1] === 'x'){
                 img.src = pathImg + 'cross' + formatImg;

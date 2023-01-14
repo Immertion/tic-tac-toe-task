@@ -32,7 +32,9 @@ rooms = [];
 
 io.on('connection', (socket) => {
     socket.on('createRoom', (room) => {
-        rooms.push(room);
+        let roomCopy = room;
+        roomCopy.players[0].id = socket.id;
+        rooms.push(roomCopy);
         socket.join(room.name);
     }) 
 
@@ -40,7 +42,12 @@ io.on('connection', (socket) => {
         const foundRoom = rooms.filter(element => element.name === room.name);
 
         if (foundRoom.length !== 0 && foundRoom[0].status === 'idle') {
-            foundRoom[0].players.push(room.player);
+            player = {
+                name: room.player,
+                id: socket.id,
+            };
+
+            foundRoom[0].players.push(player);
 
             socket.join(room.name);
 
@@ -54,14 +61,18 @@ io.on('connection', (socket) => {
         else {
             console.log('error');
         }
-        
-    }) 
+    }); 
 
     socket.on('userAction', (currentRoomName, cellId = '') => {
         const foundRoom = rooms.filter(element => element.name === currentRoomName);
         
-        console.log(foundRoom);
+        // console.log(foundRoom);
         io.to(currentRoomName).emit('updateBoardClient', foundRoom);
         
-    })
+        // console.log(socket);
+    });
+
+    socket.on("disconnect", (reason) => {
+        console.log(socket.rooms, reason);
+    });
 });
