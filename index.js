@@ -71,23 +71,24 @@ io.on('connection', (socket) => {
 
         const P1 = 1;
         const P2 = -1;
-    
-        if (foundRoom[0].players[0].currentTurn === false && socket.id === foundRoom[0].players[0].id){
+        
+
+        if (foundRoom[0].players[0].currentTurn === false && socket.id === foundRoom[0].players[0].id || foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] != 0){
             return;
         }
-        if (foundRoom[0].players[1].currentTurn === false && socket.id === foundRoom[0].players[1].id){
+        if (foundRoom[0].players[1].currentTurn === false && socket.id === foundRoom[0].players[1].id || foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] != 0){
             return;
         }
 
-        if (foundRoom[0].players[0].currentTurn === true && socket.id === foundRoom[0].players[0].id){
+        if (foundRoom[0].players[0].currentTurn === true && socket.id === foundRoom[0].players[0].id ){
             foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P1;
         }
 
         if (foundRoom[0].players[1].currentTurn === true && socket.id === foundRoom[0].players[1].id){
             foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P2;
         }
-
-
+        
+        foundRoom[0].moves += 1;
         foundRoom[0].players[0].currentTurn = !foundRoom[0].players[0].currentTurn;
         foundRoom[0].players[1].currentTurn = !foundRoom[0].players[1].currentTurn;
 
@@ -111,8 +112,11 @@ io.on('connection', (socket) => {
             foundRoom[0].board[0][2] + foundRoom[0].board[1][1] + foundRoom[0].board[2][0] === -3 ){
             status = 'P2';
         }
-
-
+        if (foundRoom[0].moves >= 9){
+            status = 'tie';
+        }
+        
+        console.log(status);
 
         io.to(currentRoomName).emit('updateBoardClient', foundRoom);
         io.to(currentRoomName).emit('statusRoom', status);
