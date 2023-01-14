@@ -53,10 +53,10 @@ io.on('connection', (socket) => {
             socket.join(room.name);
 
             if (foundRoom[0].players.length === 2) {
-                let changedRoom = foundRoom;
-                changedRoom[0].status = 'ready';
+                let changedRoom = foundRoom[0];
+                changedRoom.status = 'ready';
 
-                io.to(room.name).emit('roomStatus', changedRoom);
+                io.to(room.name).emit('updateBoardClient', changedRoom);
             }
         }
         else {
@@ -65,60 +65,61 @@ io.on('connection', (socket) => {
     }); 
 
     socket.on('userAction', (currentRoomName, cellId = '') => {
-        const foundRoom = rooms.filter(element => element.name === currentRoomName);
+        const currentRoom = rooms.filter(element => element.name === currentRoomName)[0];
 
         let status = 'process';
 
         const P1 = 1;
         const P2 = -1;
-        
 
-        if (foundRoom[0].players[0].currentTurn === false && socket.id === foundRoom[0].players[0].id || foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] != 0){
+        if (currentRoom.players[0].currentTurn === false && socket.id === currentRoom.players[0].id || currentRoom.board[cellId[4] - 1][cellId[5] - 1] != 0){
             return;
         }
-        if (foundRoom[0].players[1].currentTurn === false && socket.id === foundRoom[0].players[1].id || foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] != 0){
+        if (currentRoom.players[1].currentTurn === false && socket.id === currentRoom.players[1].id || currentRoom.board[cellId[4] - 1][cellId[5] - 1] != 0){
             return;
         }
 
-        if (foundRoom[0].players[0].currentTurn === true && socket.id === foundRoom[0].players[0].id ){
-            foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P1;
+        if (currentRoom.players[0].currentTurn === true && socket.id === currentRoom.players[0].id ){
+            currentRoom.board[cellId[4] - 1][cellId[5] - 1] = P1;
         }
 
-        if (foundRoom[0].players[1].currentTurn === true && socket.id === foundRoom[0].players[1].id){
-            foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P2;
+        if (currentRoom.players[1].currentTurn === true && socket.id === currentRoom.players[1].id){
+            currentRoom.board[cellId[4] - 1][cellId[5] - 1] = P2;
         }
         
-        foundRoom[0].moves += 1;
-        foundRoom[0].players[0].currentTurn = !foundRoom[0].players[0].currentTurn;
-        foundRoom[0].players[1].currentTurn = !foundRoom[0].players[1].currentTurn;
+        currentRoom.moves += 1;
+        currentRoom.players[0].currentTurn = !currentRoom.players[0].currentTurn;
+        currentRoom.players[1].currentTurn = !currentRoom.players[1].currentTurn;
 
-        if (foundRoom[0].board[0][0] + foundRoom[0].board[0][1] + foundRoom[0].board[0][2] === 3 || 
-            foundRoom[0].board[1][0] + foundRoom[0].board[1][1] + foundRoom[0].board[1][2] === 3 ||
-            foundRoom[0].board[2][0] + foundRoom[0].board[2][1] + foundRoom[0].board[2][2] === 3 ||
-            foundRoom[0].board[0][0] + foundRoom[0].board[1][0] + foundRoom[0].board[2][0] === 3 ||
-            foundRoom[0].board[0][1] + foundRoom[0].board[1][1] + foundRoom[0].board[2][1] === 3 ||
-            foundRoom[0].board[0][2] + foundRoom[0].board[1][2] + foundRoom[0].board[2][2] === 3 ||
-            foundRoom[0].board[0][0] + foundRoom[0].board[1][1] + foundRoom[0].board[2][2] === 3 ||
-            foundRoom[0].board[0][2] + foundRoom[0].board[1][1] + foundRoom[0].board[2][0] === 3 ){
-            status = 'P1';
+        if (currentRoom.board[0][0] + currentRoom.board[0][1] + currentRoom.board[0][2] === 3 || 
+            currentRoom.board[1][0] + currentRoom.board[1][1] + currentRoom.board[1][2] === 3 ||
+            currentRoom.board[2][0] + currentRoom.board[2][1] + currentRoom.board[2][2] === 3 ||
+            currentRoom.board[0][0] + currentRoom.board[1][0] + currentRoom.board[2][0] === 3 ||
+            currentRoom.board[0][1] + currentRoom.board[1][1] + currentRoom.board[2][1] === 3 ||
+            currentRoom.board[0][2] + currentRoom.board[1][2] + currentRoom.board[2][2] === 3 ||
+            currentRoom.board[0][0] + currentRoom.board[1][1] + currentRoom.board[2][2] === 3 ||
+            currentRoom.board[0][2] + currentRoom.board[1][1] + currentRoom.board[2][0] === 3 )
+            {
+            currentRoom.status = 'P1';
         }
-        if (foundRoom[0].board[0][0] + foundRoom[0].board[0][1] + foundRoom[0].board[0][2] === -3 || 
-            foundRoom[0].board[1][0] + foundRoom[0].board[1][1] + foundRoom[0].board[1][2] === -3 ||
-            foundRoom[0].board[2][0] + foundRoom[0].board[2][1] + foundRoom[0].board[2][2] === -3 ||
-            foundRoom[0].board[0][0] + foundRoom[0].board[1][0] + foundRoom[0].board[2][0] === -3 ||
-            foundRoom[0].board[0][1] + foundRoom[0].board[1][1] + foundRoom[0].board[2][1] === -3 ||
-            foundRoom[0].board[0][2] + foundRoom[0].board[1][2] + foundRoom[0].board[2][2] === -3 ||
-            foundRoom[0].board[0][0] + foundRoom[0].board[1][1] + foundRoom[0].board[2][2] === -3 ||
-            foundRoom[0].board[0][2] + foundRoom[0].board[1][1] + foundRoom[0].board[2][0] === -3 ){
-            status = 'P2';
+        if (currentRoom.board[0][0] + currentRoom.board[0][1] + currentRoom.board[0][2] === -3 || 
+            currentRoom.board[1][0] + currentRoom.board[1][1] + currentRoom.board[1][2] === -3 ||
+            currentRoom.board[2][0] + currentRoom.board[2][1] + currentRoom.board[2][2] === -3 ||
+            currentRoom.board[0][0] + currentRoom.board[1][0] + currentRoom.board[2][0] === -3 ||
+            currentRoom.board[0][1] + currentRoom.board[1][1] + currentRoom.board[2][1] === -3 ||
+            currentRoom.board[0][2] + currentRoom.board[1][2] + currentRoom.board[2][2] === -3 ||
+            currentRoom.board[0][0] + currentRoom.board[1][1] + currentRoom.board[2][2] === -3 ||
+            currentRoom.board[0][2] + currentRoom.board[1][1] + currentRoom.board[2][0] === -3 )
+            {
+            currentRoom.status = 'P2';
         }
-        if (foundRoom[0].moves >= 9){
-            status = 'tie';
+        if (currentRoom.moves >= 9){
+            currentRoom.status = 'tie';
         }
         
-        console.log(status);
+        console.log(currentRoom.status);
 
-        io.to(currentRoomName).emit('updateBoardClient', foundRoom);
-        io.to(currentRoomName).emit('statusRoom', status);
+        io.to(currentRoomName).emit('updateBoardClient', currentRoom);
+        // io.to(currentRoomName).emit('statusRoom', status);
     })
 });

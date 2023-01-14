@@ -62,7 +62,7 @@
 </head>
 <body>
     <!-- Модальное окно подключения к комнате -->
-    <div class="modal-window flex space-around center disabled" id="modalWindowForm">
+    <div class="noselect modal-window flex space-around center disabled" id="modalWindowForm">
         <div class="modal-window-main flex space-around center column">
             <input class="block text-center" type="text" id="inputRoomNameModal" placeholder="введите имя соперника"/>
             <button class="shadow block" id="connectToRoomModal">подключение</button>
@@ -71,15 +71,15 @@
     </div>
 
     <!-- Модальное окно с информацией -->
-    <div class="modal-window flex space-around center disabled" id="modalWindow">
+    <div class="noselect modal-window flex space-around center disabled" id="modalWindow">
         <div class="modal-window-main flex space-around center">
             <h4 class="black">ожидание соперника...</h4>
         </div>
         <div class="modal-background" id="modalBackground"></div>
     </div>
 
-    <!-- Модальное окно подключения к комнате -->
-    <div class="modal-window flex space-around center disabled" id="modalWindowInfo">
+    <!-- Модальное окно по завершении игры -->
+    <div class="noselect modal-window flex space-around center disabled" id="modalWindowInfo">
         <div class="modal-window-main flex column space-around center">
             <h4 class="black" id="modalMessage">время вышло</h4>
             <div class="flex space-around center">
@@ -90,7 +90,7 @@
         <div class="modal-background" id="modalBackground"></div>
     </div>
 
-    <div class="flex wrapper column space-around">
+    <div class="noselect flex wrapper column space-around">
         <h1 class="text-center bloom">крестики-нолики</h1>
         <div class="flex space-around wrapper-100" id="userProfile">
 

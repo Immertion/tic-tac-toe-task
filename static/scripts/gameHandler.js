@@ -8,7 +8,7 @@ function init(objectsList) {
 }
 
 $(document).ready(function () {
-    objectsList = ['#modalWindowForm', '#modalWindow', '#gameInfo', '#gameCanvas'];
+    objectsList = ['#modalWindowForm', '#modalWindow', '#modalWindowInfo', '#gameInfo', '#gameCanvas'];
     // objectsList = ['#modalWindowForm', '#modalWindow'];
     init(objectsList);
 });
@@ -70,8 +70,8 @@ function prepareRoom(room) {
     $('#modalWindow').hide(500);
     $('#playMenu').hide(500);
 
-    $('#firstPlayerName').html(room[0].players[0].name + ' (X)');
-    $('#secondPlayerName').html(room[0].players[1].name + ' (O)');
+    $('#firstPlayerName').html(room.players[0].name + ' (X)');
+    $('#secondPlayerName').html(room.players[1].name + ' (O)');
     
     $('#gameInfo').show(500);
     $('#gameCanvas').show();
@@ -79,14 +79,12 @@ function prepareRoom(room) {
 
 let currentRoom;
 
-socket.on('roomStatus', (room) => {
-    console.log(room[0]);
-    currentRoom = room[0];
-    if (room[0].status === 'ready') {
-        // socket.emit('userAction', currentRoom.name);
-        prepareRoom(room);
-    }
-});
+// socket.on('roomStatus', (room) => {
+//     if (room[0].status === 'ready') {
+//         // socket.emit('userAction', currentRoom.name);
+//         prepareRoom(room);
+//     }
+// });
 
 $('.game-cell').click(function (e) { 
     e.preventDefault();
@@ -94,8 +92,9 @@ $('.game-cell').click(function (e) {
     console.log(this.id);
 });
 
+function updateBoard(room) {
+    currentRoom = room;
 
-socket.on('updateBoardClient', room => {
     const pathImg = 'static/images/';
     const formatImg = '.png';
     
@@ -103,20 +102,68 @@ socket.on('updateBoardClient', room => {
         for (let j = 1; j <= 3; j++){
             let img = document.createElement('img');
             img.classList.add('game-icon');
-            if (room[0].board[i - 1][j - 1] === 0){
+            if (room.board[i - 1][j - 1] === 0){
                 img.src = pathImg + 'dot' + formatImg;
             }
-            else if( room[0].board[i - 1][j - 1] === 1){
+            else if( room.board[i - 1][j - 1] === 1){
                 img.src = pathImg + 'cross' + formatImg;
             }
-            else if( room[0].board[i - 1][j - 1] === -1){
+            else if( room.board[i - 1][j - 1] === -1){
                 img.src = pathImg + 'o' + formatImg;
             }
             $('#' + 'game' + i + j).html(img);
         }
     }
+
+    room.players.forEach(player => {
+        if (player.currentTurn && player.id === socket.id) {
+            $('#message').html('ваш ход');
+        }
+        else if (!player.currentTurn && player.id === socket.id){
+            $('#message').html('ходит соперник');
+        }
+    });
+}
+
+function showModal(message) {
+    setTimeout(() => {
+        $('#modalWindowInfo').show(500);
+        $('#modalMessage').html(message);
+    }, 1000);
+}
+
+function closeModal() {
+    $('#modalWindowInfo').hide(500);
+}
+
+socket.on('updateBoardClient', (room) => {
+    console.log(room);
+
+    switch (room.status) {
+        // Подготовка к игре:
+        // сокрытие меню и показывание игрового
+        // поля и статистики
+        case 'ready':
+            prepareRoom(room);
+            break;
+        // В случае если игрок 1 побеждает
+        case 'P1':
+            showModal(room.players[0].name + ' победил') 
+            break;
+        // В случае если игрок 2 побеждает
+        case 'P2':
+            showModal(room.players[1].name + ' победил') 
+            break;
+        // В случае если ничья
+        case 'tie':
+            showModal('ничья') 
+            break;
+    }
+
+    updateBoard(room);
 })
-socket.on('statusRoom', status => {
+
+socket.on('statusRoom', (status) => {
     if (status === 'process'){
     }
     else if (status === 'P1'){
@@ -129,4 +176,18 @@ socket.on('statusRoom', status => {
         
     }
 })
+
+$('#restartRoom').click(function (e) { 
+    e.preventDefault();
+
+    closeModal();
+    updateBoard(currentRoom);
+});
+
+$('#backToLobby').click(function (e) { 
+    e.preventDefault();
+    
+    closeModal();
+    location.href = '/';
+});
 
