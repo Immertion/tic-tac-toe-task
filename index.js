@@ -65,14 +65,44 @@ io.on('connection', (socket) => {
 
     socket.on('userAction', (currentRoomName, cellId = '') => {
         const foundRoom = rooms.filter(element => element.name === currentRoomName);
-        
-        // console.log(foundRoom);
-        io.to(currentRoomName).emit('updateBoardClient', foundRoom);
-        
-        // console.log(socket);
-    });
 
-    socket.on("disconnect", (reason) => {
-        console.log(socket.rooms, reason);
-    });
+        let win = 3;
+        let status = 'process';
+        let P1 = 1;
+        let P2 = -1;
+        if (foundRoom[0].currentTurn === true){
+            foundRoom[0].board[id[4] - 1][id[5] - 1] = P1;
+        }
+        else{
+            foundRoom[0].board[id[4] - 1][id[5] - 1] = P2;
+        }
+        foundRoom[0].currentTurn = !foundRoom[0].currentTurn;
+
+        if (foundRoom[0].board[0][0] + foundRoom[0].board[0][1] + foundRoom[0].board[0][2] === 3 || 
+            foundRoom[0].board[1][0] + foundRoom[0].board[1][1] + foundRoom[0].board[1][2] === 3 ||
+            foundRoom[0].board[2][0] + foundRoom[0].board[2][1] + foundRoom[0].board[2][2] === 3 ||
+            foundRoom[0].board[0][0] + foundRoom[0].board[1][0] + foundRoom[0].board[2][0] === 3 ||
+            foundRoom[0].board[0][1] + foundRoom[0].board[1][1] + foundRoom[0].board[2][1] === 3 ||
+            foundRoom[0].board[0][2] + foundRoom[0].board[1][2] + foundRoom[0].board[2][2] === 3 ||
+            foundRoom[0].board[0][0] + foundRoom[0].board[1][1] + foundRoom[0].board[2][2] === 3 ||
+            foundRoom[0].board[0][2] + foundRoom[0].board[1][1] + foundRoom[0].board[2][0] === 3 ){
+            status = 'P1';
+        }
+        if (foundRoom[0].board[0][0] + foundRoom[0].board[0][1] + foundRoom[0].board[0][2] === -3 || 
+            foundRoom[0].board[1][0] + foundRoom[0].board[1][1] + foundRoom[0].board[1][2] === -3 ||
+            foundRoom[0].board[2][0] + foundRoom[0].board[2][1] + foundRoom[0].board[2][2] === -3 ||
+            foundRoom[0].board[0][0] + foundRoom[0].board[1][0] + foundRoom[0].board[2][0] === -3 ||
+            foundRoom[0].board[0][1] + foundRoom[0].board[1][1] + foundRoom[0].board[2][1] === -3 ||
+            foundRoom[0].board[0][2] + foundRoom[0].board[1][2] + foundRoom[0].board[2][2] === -3 ||
+            foundRoom[0].board[0][0] + foundRoom[0].board[1][1] + foundRoom[0].board[2][2] === -3 ||
+            foundRoom[0].board[0][2] + foundRoom[0].board[1][1] + foundRoom[0].board[2][0] === -3 ){
+            status = 'P2';
+        }
+
+        console.log(status);
+        console.log(foundRoom);
+      
+        io.to(currentRoomName).emit('updateBoardClient', foundRoom);
+        io.to(currentRoomName).emit('statusRoom', status);
+    })
 });
