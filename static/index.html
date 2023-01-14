@@ -63,8 +63,8 @@
 <body>
     <!-- Модальное окно подключения к комнате -->
     <div class="modal-window flex space-around center disabled" id="modalWindowForm">
-        <div class="modal-window-main flex space-around center">
-            <input class="block" type="text" id="inputRoomNameModal" placeholder="введите имя"/>
+        <div class="modal-window-main flex space-around center column">
+            <input class="block text-center" type="text" id="inputRoomNameModal" placeholder="введите имя соперника"/>
             <button class="shadow block" id="connectToRoomModal">подключение</button>
         </div>
         <div class="modal-background" id="modalBackground"></div>
@@ -78,19 +78,32 @@
         <div class="modal-background" id="modalBackground"></div>
     </div>
 
+    <!-- Модальное окно подключения к комнате -->
+    <div class="modal-window flex space-around center disabled" id="modalWindowInfo">
+        <div class="modal-window-main flex column space-around center">
+            <h4 class="black" id="modalMessage">время вышло</h4>
+            <div class="flex space-around center">
+                <button class="shadow block" id="restartRoom">ещё раз</button>
+                <button class="shadow block" id="backToLobby">вернуться в лобби</button>
+            </div>
+        </div>
+        <div class="modal-background" id="modalBackground"></div>
+    </div>
+
     <div class="flex wrapper column space-around">
         <h1 class="text-center bloom">крестики-нолики</h1>
         <div class="flex space-around wrapper-100" id="userProfile">
 
             <!-- Меню -->
             <div class="buttons flex column space-around" id="playMenu">
-                <input class="block" type="text" id="inputPlayerName" placeholder="введите имя"/>
+                <input class="block text-center" type="text" id="inputPlayerName" placeholder="введите имя"/>
                 <button class="shadow block" id="createRoom">создать комнату</button>
                 <button class="shadow block" id="connectToRoom">найти комнату</button>
             </div>
 
             <!-- Игровое поле -->
-            <div class="flex space-around center game" id="gameCanvas">
+            <div class="flex column space-around center game disabled" id="gameCanvas">
+                <h2 class="text-center bloom" id="message">ваш ход</h2>
                 <table>
                     <tr>
                         <td class="game-cell" id="game11"><img class="game-icon"/></td>
@@ -108,10 +121,11 @@
                         <td class="game-cell" id="game33"><img class="game-icon"/></td>
                     </tr>
                 </table>
+                <h2 class="text-center bloom" id="gameTimer">30</h2>
             </div>
 
             <!-- Информация об игре -->
-            <div class="info flex center" id="gameInfo">
+            <div class="info flex center disabled" id="gameInfo">
                 <table>
                     <th></th>
                     <th>

@@ -8,8 +8,8 @@ function init(objectsList) {
 }
 
 $(document).ready(function () {
-    // objectsList = ['#modalWindowForm', '#modalWindow', '#gameInfo', '#gameCanvas'];
-    objectsList = ['#modalWindowForm', '#modalWindow'];
+    objectsList = ['#modalWindowForm', '#modalWindow', '#gameInfo', '#gameCanvas'];
+    // objectsList = ['#modalWindowForm', '#modalWindow'];
     init(objectsList);
 });
 
@@ -44,6 +44,7 @@ $('#createRoom').click(function (e) {
         ],
         currentTurn: true,
         moves: 0,
+        timer: 0
     };
 
     socket.emit('createRoom', room);
