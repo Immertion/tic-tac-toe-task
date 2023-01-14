@@ -33,11 +33,10 @@ $('#createRoom').click(function (e) {
             playerName,
         ],
         status: 'idle',
-        board: [
-            ['x', '_', 'o'], 
-            ['o', 'x', 'o'],
-            ['_', 'o', 'x'],
-        ],
+        board: [[0, 0, 0], 
+                [0, 0, 0],
+                [0, 0, 0]],
+        currentTurn: true,
     };
 
     socket.emit('createRoom', room);
@@ -98,19 +97,31 @@ socket.on('updateBoardClient', room => {
     for (let i = 1; i <= 3; i++){
         for (let j = 1; j <= 3; j++){
             let img = document.createElement('img');
-            img.classList.add('game-icon');
-            if (room[0].board[i - 1][j - 1] === '_'){
-                img.src = pathImg + 'dot' + formatImg;
+            if (room[0].board[i - 1][j - 1] === 0){
+                img.src = pathImg + 'dot.svg';
 
             }
-            else if( room[0].board[i - 1][j - 1] === 'x'){
-                img.src = pathImg + 'cross' + formatImg;
+            else if( room[0].board[i - 1][j - 1] === 1){
+                img.src = pathImg + 'cross.svg';
             }
-            else if( room[0].board[i - 1][j - 1] === 'o'){
-                img.src = pathImg + 'o' + formatImg;
+            else if( room[0].board[i - 1][j - 1] === -1){
+                img.src = pathImg + 'o.svg';
             }
-            console.log('#' + 'game' + i + j);
             $('#' + 'game' + i + j).html(img);
         }
     }
 })
+socket.on('statusRoom', status => {
+    if (status === 'process'){
+    }
+    else if (status === 'P1'){
+
+    }
+    else if (status === 'P2'){
+
+    }
+    else if (status === 'tie'){
+        
+    }
+})
+
