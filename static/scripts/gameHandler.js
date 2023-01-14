@@ -33,9 +33,10 @@ $('#createRoom').click(function (e) {
             playerName,
         ],
         status: 'idle',
-        board: [['_', '_', '_'], 
-                ['_', '_', '_'],
-                ['_', '_', '_']]
+        board: [[0, 0, 0], 
+                [0, 0, 0],
+                [0, 0, 0]],
+        currentTurn: true,
     };
 
     socket.emit('createRoom', room);
@@ -93,18 +94,31 @@ socket.on('updateBoard', room => {
     for (let i = 1; i <= 3; i++){
         for (let j = 1; j <= 3; j++){
             let img = document.createElement('img');
-            if (room[0].board[i - 1][j - 1] === '_'){
+            if (room[0].board[i - 1][j - 1] === 0){
                 img.src = pathImg + 'dot.svg';
 
             }
-            else if( room[0].board[i - 1][j - 1] === 'x'){
+            else if( room[0].board[i - 1][j - 1] === 1){
                 img.src = pathImg + 'cross.svg';
             }
-            else if( room[0].board[i - 1][j - 1] === 'o'){
+            else if( room[0].board[i - 1][j - 1] === -1){
                 img.src = pathImg + 'o.svg';
             }
-            console.log('#' + 'game' + i + j);
             $('#' + 'game' + i + j).html(img);
         }
     }
 })
+socket.on('statusRoom', status => {
+    if (status === 'process'){
+    }
+    else if (status === 'P1'){
+
+    }
+    else if (status === 'P2'){
+
+    }
+    else if (status === 'tie'){
+        
+    }
+})
+
