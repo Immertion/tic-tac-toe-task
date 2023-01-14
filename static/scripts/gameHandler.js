@@ -71,3 +71,8 @@ socket.on('roomStatus', (room) => {
         prepareRoom(room);
     }
 });
+
+$('.table-element').click(function (e) { 
+    e.preventDefault();
+    console.log(this.id);
+});

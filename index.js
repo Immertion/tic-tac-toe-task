@@ -38,7 +38,8 @@ io.on('connection', (socket) => {
 
     socket.on('joinRoom', (room) => {
         const foundRoom = rooms.filter(element => element.name === room.name);
-        if (foundRoom.length !== 0) {
+
+        if (foundRoom.length !== 0 && foundRoom[0].status === 'idle') {
             foundRoom[0].players.push(room.player);
 
             socket.join(room.name);
@@ -53,5 +54,7 @@ io.on('connection', (socket) => {
         else {
             console.log('error');
         }
+
+        console.log(rooms);
     }) 
 });
