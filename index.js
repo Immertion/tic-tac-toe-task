@@ -54,7 +54,14 @@ io.on('connection', (socket) => {
         else {
             console.log('error');
         }
-
-        console.log(rooms);
+        
     }) 
+
+    socket.on("updateBoard", (id, currentRoomName) => {
+        const foundRoom = rooms.filter(element => element.name === currentRoomName);
+        
+        
+        io.to(currentRoomName).emit('updateBoard', foundRoom);
+        
+    })
 });

@@ -33,6 +33,9 @@ $('#createRoom').click(function (e) {
             playerName,
         ],
         status: 'idle',
+        board: [['_', '_', '_'], 
+                ['_', '_', '_'],
+                ['_', '_', '_']]
     };
 
     socket.emit('createRoom', room);
@@ -65,8 +68,11 @@ function prepareRoom(room) {
     $('#gameCanvas').show();
 }
 
+let currentRoom;
+
 socket.on('roomStatus', (room) => {
     console.log(room[0]);
+    currentRoom = room[0];
     if (room[0].status === 'ready') {
         prepareRoom(room);
     }
@@ -75,4 +81,30 @@ socket.on('roomStatus', (room) => {
 $('.table-element').click(function (e) { 
     e.preventDefault();
     console.log(this.id);
+
+    socket.emit("updateBoard", this.id, currentRoom.name);
 });
+
+
+socket.on('updateBoard', room => {
+
+    const pathImg = 'static/images/';
+    
+    for (let i = 1; i <= 3; i++){
+        for (let j = 1; j <= 3; j++){
+            let img = document.createElement('img');
+            if (room[0].board[i - 1][j - 1] === '_'){
+                img.src = pathImg + 'dot.svg';
+
+            }
+            else if( room[0].board[i - 1][j - 1] === 'x'){
+                img.src = pathImg + 'cross.svg';
+            }
+            else if( room[0].board[i - 1][j - 1] === 'o'){
+                img.src = pathImg + 'o.svg';
+            }
+            console.log('#' + 'game' + i + j);
+            $('#' + 'game' + i + j).html(img);
+        }
+    }
+})
