@@ -46,10 +46,12 @@
             border-radius: 20px;
         }
 
-        .table-element {
+        .game-icon {
+            border-radius: 20px;
+            margin: 5px;
             transition: 500ms;
         }
-        .table-element:hover {
+        .game-icon:hover {
             background: #ffffff;
         }
 
@@ -91,19 +93,19 @@
             <div class="flex space-around center game" id="gameCanvas">
                 <table>
                     <tr>
-                        <td class="table-element" id="game11"><img src="./static/images/dot.svg"/></td>
-                        <td class="table-element" id="game12"><img src="./static/images/dot.svg"/></td>
-                        <td class="table-element" id="game13"><img src="./static/images/dot.svg"/></td>
+                        <td class="game-cell" id="game11"><img class="game-icon" src="./static/images/cross.svg"/></td>
+                        <td class="game-cell" id="game12"><img class="game-icon" src="./static/images/cross.svg"/></td>
+                        <td class="game-cell" id="game13"><img class="game-icon" src="./static/images/o.svg"/></td>
                     </tr>
                     <tr>
-                        <td class="table-element" id="game21"><img src="./static/images/dot.svg"/></td>
-                        <td class="table-element" id="game22"><img src="./static/images/dot.svg"/></td>
-                        <td class="table-element" id="game23"><img src="./static/images/dot.svg"/></td>
+                        <td class="game-cell" id="game21"><img class="game-icon" src="./static/images/cross.svg"/></td>
+                        <td class="game-cell" id="game22"><img class="game-icon" src="./static/images/o.svg"/></td>
+                        <td class="game-cell" id="game23"><img class="game-icon" src="./static/images/o.svg"/></td>
                     </tr>
                     <tr>
-                        <td class="table-element" id="game31"><img src="./static/images/dot.svg"/></td>
-                        <td class="table-element" id="game32"><img src="./static/images/dot.svg"/></td>
-                        <td class="table-element" id="game33"><img src="./static/images/dot.svg"/></td>
+                        <td class="game-cell" id="game31"><img class="game-icon" src="./static/images/o.svg"/></td>
+                        <td class="game-cell" id="game32"><img class="game-icon" src="./static/images/cross.svg"/></td>
+                        <td class="game-cell" id="game33"><img class="game-icon" src="./static/images/cross.svg"/></td>
                     </tr>
                 </table>
             </div>

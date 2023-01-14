@@ -75,21 +75,24 @@ socket.on('roomStatus', (room) => {
     console.log(room[0]);
     currentRoom = room[0];
     if (room[0].status === 'ready') {
+        socket.emit('userAction', currentRoom.name);
         prepareRoom(room);
     }
 });
 
-$('.table-element').click(function (e) { 
+$('.game-cell').click(function (e) { 
     e.preventDefault();
+    socket.emit('userAction', currentRoom.name, this.id);
     console.log(this.id);
-
-    socket.emit("updateBoard", this.id, currentRoom.name);
 });
 
 
-socket.on('updateBoard', room => {
+socket.on('updateBoardClient', room => {
 
     const pathImg = 'static/images/';
+    const formatImg = '.png';
+
+    console.log(room);
     
     for (let i = 1; i <= 3; i++){
         for (let j = 1; j <= 3; j++){

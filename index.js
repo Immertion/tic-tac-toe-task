@@ -57,8 +57,9 @@ io.on('connection', (socket) => {
         
     }) 
 
-    socket.on("updateBoard", (id, currentRoomName) => {
+    socket.on('userAction', (currentRoomName, cellId = '') => {
         const foundRoom = rooms.filter(element => element.name === currentRoomName);
+
         let win = 3;
         let status = 'process';
         let P1 = 1;
@@ -93,8 +94,9 @@ io.on('connection', (socket) => {
         }
 
         console.log(status);
-        io.to(currentRoomName).emit('updateBoard', foundRoom);
+        console.log(foundRoom);
+      
+        io.to(currentRoomName).emit('updateBoardClient', foundRoom);
         io.to(currentRoomName).emit('statusRoom', status);
-        
     })
 });
