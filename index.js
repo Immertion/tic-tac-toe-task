@@ -68,13 +68,17 @@ io.on('connection', (socket) => {
 
         let win = 3;
         let status = 'process';
-        let P1 = 1;
-        let P2 = -1;
+
+        const P1 = 1;
+        const P2 = -1;
+        
+        console.log(foundRoom[0].board, cellId);
+
         if (foundRoom[0].currentTurn === true){
-            foundRoom[0].board[id[4] - 1][id[5] - 1] = P1;
+            foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P1;
         }
         else{
-            foundRoom[0].board[id[4] - 1][id[5] - 1] = P2;
+            foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P2;
         }
         foundRoom[0].currentTurn = !foundRoom[0].currentTurn;
 
