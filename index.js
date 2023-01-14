@@ -104,7 +104,6 @@ io.on('connection', (socket) => {
         }
 
         console.log(status);
-        console.log(foundRoom);
       
         io.to(currentRoomName).emit('updateBoardClient', foundRoom);
         io.to(currentRoomName).emit('statusRoom', status);
