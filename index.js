@@ -57,11 +57,11 @@ io.on('connection', (socket) => {
         
     }) 
 
-    socket.on("updateBoard", (id, currentRoomName) => {
+    socket.on('userAction', (currentRoomName, cellId = '') => {
         const foundRoom = rooms.filter(element => element.name === currentRoomName);
         
-        
-        io.to(currentRoomName).emit('updateBoard', foundRoom);
+        console.log(foundRoom);
+        io.to(currentRoomName).emit('updateBoardClient', foundRoom);
         
     })
 });
