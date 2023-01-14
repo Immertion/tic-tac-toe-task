@@ -33,6 +33,7 @@ $('#createRoom').click(function (e) {
             {
                 name: playerName,
                 id: undefined,
+                currentTurn: true,
             }
         ],
         status: 'idle',

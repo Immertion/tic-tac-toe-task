@@ -45,6 +45,7 @@ io.on('connection', (socket) => {
             player = {
                 name: room.player,
                 id: socket.id,
+                currentTurn: false,
             };
 
             foundRoom[0].players.push(player);
@@ -66,21 +67,29 @@ io.on('connection', (socket) => {
     socket.on('userAction', (currentRoomName, cellId = '') => {
         const foundRoom = rooms.filter(element => element.name === currentRoomName);
 
-        let win = 3;
         let status = 'process';
 
         const P1 = 1;
         const P2 = -1;
-        
-        console.log(foundRoom[0].board, cellId);
+    
+        if (foundRoom[0].players[0].currentTurn === false && socket.id === foundRoom[0].players[0].id){
+            return;
+        }
+        if (foundRoom[0].players[1].currentTurn === false && socket.id === foundRoom[0].players[1].id){
+            return;
+        }
 
-        if (foundRoom[0].currentTurn === true){
+        if (foundRoom[0].players[0].currentTurn === true && socket.id === foundRoom[0].players[0].id){
             foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P1;
         }
-        else{
+
+        if (foundRoom[0].players[1].currentTurn === true && socket.id === foundRoom[0].players[1].id){
             foundRoom[0].board[cellId[4] - 1][cellId[5] - 1] = P2;
         }
-        foundRoom[0].currentTurn = !foundRoom[0].currentTurn;
+
+
+        foundRoom[0].players[0].currentTurn = !foundRoom[0].players[0].currentTurn;
+        foundRoom[0].players[1].currentTurn = !foundRoom[0].players[1].currentTurn;
 
         if (foundRoom[0].board[0][0] + foundRoom[0].board[0][1] + foundRoom[0].board[0][2] === 3 || 
             foundRoom[0].board[1][0] + foundRoom[0].board[1][1] + foundRoom[0].board[1][2] === 3 ||
@@ -103,8 +112,8 @@ io.on('connection', (socket) => {
             status = 'P2';
         }
 
-        console.log(status);
-      
+
+
         io.to(currentRoomName).emit('updateBoardClient', foundRoom);
         io.to(currentRoomName).emit('statusRoom', status);
     })
