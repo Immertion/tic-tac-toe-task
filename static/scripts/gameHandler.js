@@ -49,7 +49,6 @@ $('#createRoom').click(function (e) {
             [0, 0, 0],
             [0, 0, 0],
         ],
-        currentTurn: true,
         moves: 0,
         timer: undefined,
         isUpdated: true,
@@ -122,6 +121,8 @@ function updateBoard(room) {
         }
     }
 
+    
+
     room.players.forEach(player => {
         if (player.currentTurn && player.id === socket.id) {
             $('#message').html('ваш ход');
@@ -153,6 +154,13 @@ function closeModal() {
 socket.on('updateBoardClient', (room) => {
     console.log(room);
 
+    if (room.players[0].id.readyState === 3){
+        socket.emit('destroyRoom', currentRoom.name);
+    }
+    if (room.players[1].id.readyState === 3){
+        socket.emit('destroyRoom', currentRoom.name);
+    }
+
     switch (room.status) {
         // Подготовка к игре:
         // сокрытие меню и показывание игрового
@@ -174,6 +182,7 @@ socket.on('updateBoardClient', (room) => {
             break;
         case 'destroyed':
             location.href = '/';
+            // room.preventDefault();
             break;
         case 'restart':
             prepareRoom(room);
@@ -182,6 +191,7 @@ socket.on('updateBoardClient', (room) => {
 
     updateBoard(room);
 })
+
 
 $('#restartRoom').click(function (e) { 
     e.preventDefault();
@@ -198,4 +208,5 @@ $('#backToLobby').click(function (e) {
 
     socket.emit('destroyRoom', currentRoom.name);
 });
+
 
