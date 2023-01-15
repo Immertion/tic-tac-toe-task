@@ -1,5 +1,9 @@
 socket = io();
 
+///
+const ANIMATION_DURATION = '';
+///
+
 function init(objectsList) {
     objectsList.forEach(elementId => {
         $(elementId).hide();
@@ -15,12 +19,12 @@ $(document).ready(function () {
 
 $('#connectToRoom').click(function (e) {
     e.preventDefault();
-    $('#modalWindowForm').show(500);
+    $('#modalWindowForm').fadeIn(ANIMATION_DURATION);
 });
 
 $('#modalBackground').click(function (e) {
     e.preventDefault();
-    $('#modalWindowForm').hide(500);
+    $('#modalWindowForm').slideUp(ANIMATION_DURATION);
 });
 
 $('#createRoom').click(function (e) { 
@@ -34,6 +38,9 @@ $('#createRoom').click(function (e) {
                 name: playerName,
                 id: undefined,
                 currentTurn: true,
+                wins: 0,
+                loses: 0,
+                ties: 0,
             }
         ],
         status: 'idle',
@@ -44,12 +51,13 @@ $('#createRoom').click(function (e) {
         ],
         currentTurn: true,
         moves: 0,
-        timer: 0
+        timer: undefined,
+        isUpdated: true,
     };
 
     socket.emit('createRoom', room);
 
-    $('#modalWindow').show('500');
+    $('#modalWindow').fadeIn(ANIMATION_DURATION);
 });
 
 $('#connectToRoomModal').click(function (e) { 
@@ -66,34 +74,33 @@ $('#connectToRoomModal').click(function (e) {
 });
 
 function prepareRoom(room) {
-    $('#modalWindowForm').hide(500);
-    $('#modalWindow').hide(500);
-    $('#playMenu').hide(500);
+    $('#modalWindowForm').hide();
+    $('#modalWindow').hide();
+    $('#playMenu').hide();
 
     $('#firstPlayerName').html(room.players[0].name + ' (X)');
     $('#secondPlayerName').html(room.players[1].name + ' (O)');
     
-    $('#gameInfo').show(500);
-    $('#gameCanvas').show();
+    $('#gameInfo').fadeIn(ANIMATION_DURATION);
+    $('#gameCanvas').fadeIn(ANIMATION_DURATION);
 }
 
 let currentRoom;
 
-// socket.on('roomStatus', (room) => {
-//     if (room[0].status === 'ready') {
-//         // socket.emit('userAction', currentRoom.name);
-//         prepareRoom(room);
-//     }
-// });
-
 $('.game-cell').click(function (e) { 
     e.preventDefault();
     socket.emit('userAction', currentRoom.name, this.id);
-    console.log(this.id);
 });
 
 function updateBoard(room) {
     currentRoom = room;
+
+    // Если нет необходимости обновлять все ячейки,
+    // просто обновляем таймер
+    if (!room.isUpdated) {
+        $('#gameTimer').html(room.timer);
+        return;
+    }
 
     const pathImg = 'static/images/';
     const formatImg = '.png';
@@ -123,17 +130,24 @@ function updateBoard(room) {
             $('#message').html('ходит соперник');
         }
     });
+
+    $('#firstPlayerWins').html(room.players[0].wins);
+    $('#secondPlayerWins').html(room.players[1].wins);
+    $('#firstPlayerLoses').html(room.players[0].loses);
+    $('#secondPlayerLoses').html(room.players[1].loses);
+    $('#firstPlayerTies').html(room.players[0].ties);
+    $('#secondPlayerTies').html(room.players[1].ties);
 }
 
 function showModal(message) {
     setTimeout(() => {
-        $('#modalWindowInfo').show(500);
+        $('#modalWindowInfo').fadeIn(ANIMATION_DURATION);
         $('#modalMessage').html(message);
     }, 1000);
 }
 
 function closeModal() {
-    $('#modalWindowInfo').hide(500);
+    $('#modalWindowInfo').slideUp(500);
 }
 
 socket.on('updateBoardClient', (room) => {
@@ -158,36 +172,30 @@ socket.on('updateBoardClient', (room) => {
         case 'tie':
             showModal('ничья') 
             break;
+        case 'destroyed':
+            location.href = '/';
+            break;
+        case 'restart':
+            prepareRoom(room);
+            break;
     }
 
     updateBoard(room);
-})
-
-socket.on('statusRoom', (status) => {
-    if (status === 'process'){
-    }
-    else if (status === 'P1'){
-
-    }
-    else if (status === 'P2'){
-
-    }
-    else if (status === 'tie'){
-        
-    }
 })
 
 $('#restartRoom').click(function (e) { 
     e.preventDefault();
 
     closeModal();
-    updateBoard(currentRoom);
+
+    socket.emit('restartRoom', currentRoom.name);
 });
 
 $('#backToLobby').click(function (e) { 
     e.preventDefault();
     
     closeModal();
-    location.href = '/';
+
+    socket.emit('destroyRoom', currentRoom.name);
 });
 

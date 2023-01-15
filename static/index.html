@@ -65,7 +65,7 @@
     <div class="noselect modal-window flex space-around center disabled" id="modalWindowForm">
         <div class="modal-window-main flex space-around center column">
             <input class="block text-center" type="text" id="inputRoomNameModal" placeholder="введите имя соперника"/>
-            <button class="shadow block" id="connectToRoomModal">подключение</button>
+            <button class="block" id="connectToRoomModal">подключение</button>
         </div>
         <div class="modal-background" id="modalBackground"></div>
     </div>
@@ -83,8 +83,8 @@
         <div class="modal-window-main flex column space-around center">
             <h4 class="black" id="modalMessage">время вышло</h4>
             <div class="flex space-around center">
-                <button class="shadow block" id="restartRoom">ещё раз</button>
-                <button class="shadow block" id="backToLobby">вернуться в лобби</button>
+                <button class="block" id="restartRoom">ещё раз</button>
+                <button class="block" id="backToLobby">вернуться в лобби</button>
             </div>
         </div>
         <div class="modal-background" id="modalBackground"></div>
@@ -97,8 +97,8 @@
             <!-- Меню -->
             <div class="buttons flex column space-around" id="playMenu">
                 <input class="block text-center" type="text" id="inputPlayerName" placeholder="введите имя"/>
-                <button class="shadow block" id="createRoom">создать комнату</button>
-                <button class="shadow block" id="connectToRoom">найти комнату</button>
+                <button class="block" id="createRoom">создать комнату</button>
+                <button class="block" id="connectToRoom">найти комнату</button>
             </div>
 
             <!-- Игровое поле -->
@@ -136,24 +136,24 @@
                     </th>
                     <tr>
                         <td><h4 class="yellow-undlerline bloom margin-10">побед</h4></td>
-                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
-                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
+                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10" id="firstPlayerWins">0</h4></td>
+                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10" id="secondPlayerWins">0</h4></td>
                     </tr>
                     <tr>
                         <td><h4 class="yellow-undlerline bloom margin-10">поражений</h4></td>
-                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
-                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
+                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10" id="firstPlayerLoses">0</h4></td>
+                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10" id="secondPlayerLoses">0</h4></td>
                     </tr>
                     <tr>
                         <td><h4 class="yellow-undlerline bloom margin-10">ничьих</h4></td>
-                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
-                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
+                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10" id="firstPlayerTies">0</h4></td>
+                        <td class="text-center"><h4 class="yellow-undlerline bloom margin-10" id="secondPlayerTies">0</h4></td>
                     </tr>
                     <tr><div class="space-50"></div></tr>
-                    <tr>
+                    <!-- <tr>
                         <td><h4 class="yellow-undlerline bloom margin-10">всего игр</h4></td>
                         <td class="text-center"><h4 class="yellow-undlerline bloom margin-10">0</h4></td>
-                    </tr>
+                    </tr> -->
                 </table>
             </div>
         </div>
