@@ -1,7 +1,7 @@
 socket = io();
 
 ///
-const ANIMATION_DURATION = '';
+const ANIMATION_DURATION = 500;
 ///
 
 function init(objectsList) {
