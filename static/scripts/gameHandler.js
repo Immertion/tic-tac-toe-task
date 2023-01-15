@@ -182,7 +182,7 @@ socket.on('updateBoardClient', (room) => {
             break;
         case 'destroyed':
             location.href = '/';
-            room.preventDefault();
+            // room.preventDefault();
             break;
         case 'restart':
             prepareRoom(room);
@@ -209,5 +209,4 @@ $('#backToLobby').click(function (e) {
     socket.emit('destroyRoom', currentRoom.name);
 });
 
-socket.on
 

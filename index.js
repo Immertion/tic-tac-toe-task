@@ -222,16 +222,16 @@ io.on('connection', (socket) => {
         return room;
     }
 
-    socket.on('disconnect', function(){
+    // socket.on('disconnect', function(){
         
-        const currentRoom = findRoomByIdSocket(socket.id);
-        if (currentRoom){
-            currentRoom.status = 'destroyed';
+    //     const currentRoom = findRoomByIdSocket(socket.id);
+    //     if (currentRoom){
+    //         currentRoom.status = 'destroyed';
 
-            io.to(currentRoom.name).emit('updateBoardClient', currentRoom);
-            rooms = rooms.filter(element => element !== currentRoom);
-        }
-    })
+    //         io.to(currentRoom.name).emit('updateBoardClient', currentRoom);
+    //         rooms = rooms.filter(element => element !== currentRoom);
+    //     }
+    // })
 
     socket.on('restartRoom', (roomName) => {
         if (!restartSubmitSockets.includes(socket.id)) {
