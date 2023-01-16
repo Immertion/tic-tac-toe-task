@@ -85,10 +85,10 @@ io.on('connection', (socket) => {
         room.timer--;
 
         if (room.timer <= 0) {
-            if (room.players[0].currentTurn) {
+            if (room.players[0].currentTurn && room.timer === 0) {
                 room.status = 'P2';
             }
-            else if (room.players[1].currentTurn) {
+            else if (room.players[1].currentTurn && room.timer === 0) {
                 room.status = 'P1';
             }
 
@@ -151,6 +151,7 @@ io.on('connection', (socket) => {
             {
 
             currentRoom.status = 'P1';
+            console.log(currentRoom.status);
             
             currentRoom.players[0].wins++;
             currentRoom.players[1].loses++;
@@ -197,7 +198,7 @@ io.on('connection', (socket) => {
         const currentRoom = findRoomByName(roomName);
 
         currentRoom.status = 'destroyed';
-
+        console.log(currentRoom);
         io.to(roomName).emit('updateBoardClient', currentRoom);
         rooms = rooms.filter(element => element !== currentRoom);
     });
@@ -222,16 +223,16 @@ io.on('connection', (socket) => {
         return room;
     }
 
-    // socket.on('disconnect', function(){
-        
-    //     const currentRoom = findRoomByIdSocket(socket.id);
-    //     if (currentRoom){
-    //         currentRoom.status = 'destroyed';
+    socket.on('disconnect', function(){
+        const currentRoom = findRoomByIdSocket(socket.id);
+        if (currentRoom){
+            console.log(currentRoom);
+            currentRoom.timer = 0;
+            // socket.emit("disconn", currentRoom);
+            io.to(currentRoom.name).emit('disconn', currentRoom);
 
-    //         io.to(currentRoom.name).emit('updateBoardClient', currentRoom);
-    //         rooms = rooms.filter(element => element !== currentRoom);
-    //     }
-    // })
+        }
+    })
 
     socket.on('restartRoom', (roomName) => {
         if (!restartSubmitSockets.includes(socket.id)) {
