@@ -96,7 +96,7 @@ function updateBoard(room) {
 
     // Если нет необходимости обновлять все ячейки,
     // просто обновляем таймер
-    if (!room.isUpdated) {
+    if (!room.isUpdated && room.timer >= 0) {
         $('#gameTimer').html(room.timer);
         return;
     }
@@ -152,14 +152,7 @@ function closeModal() {
 }
 
 socket.on('updateBoardClient', (room) => {
-    console.log(room);
-
-    if (room.players[0].id.readyState === 3){
-        socket.emit('destroyRoom', currentRoom.name);
-    }
-    if (room.players[1].id.readyState === 3){
-        socket.emit('destroyRoom', currentRoom.name);
-    }
+    // console.log(room);
 
     switch (room.status) {
         // Подготовка к игре:
@@ -182,7 +175,6 @@ socket.on('updateBoardClient', (room) => {
             break;
         case 'destroyed':
             location.href = '/';
-            // room.preventDefault();
             break;
         case 'restart':
             prepareRoom(room);
@@ -192,6 +184,10 @@ socket.on('updateBoardClient', (room) => {
     updateBoard(room);
 })
 
+socket.on('disconn', (room) => {
+
+    socket.emit('destroyRoom', room.name);
+})
 
 $('#restartRoom').click(function (e) { 
     e.preventDefault();
