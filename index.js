@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
         roomCopy.players[0].id = socket.id;
         rooms.push(roomCopy);
         socket.join(room.name);
-    }) 
+    })
 
     socket.on('joinRoom', (room) => {
         const foundRoom = rooms.filter(element => element.name === room.name);
@@ -61,9 +61,16 @@ io.on('connection', (socket) => {
             }
         }
         else {
+            if (!foundRoom[0]) {
+                io.to(socket.id).emit('errorMessаge', 'Комната не найдена!')
+            }
+            else  {
+                io.to(socket.id).emit('errorMessаge', 'Комната заполнена!')
+            }
             console.log('error');
+
         }
-    }); 
+    });
 
     const GAME_DURATION_SEC = 31;
 
@@ -114,7 +121,7 @@ io.on('connection', (socket) => {
         const P2 = -1;
 
         // Ход совершён, прибавляем время
-    
+
 
         if (currentRoom.players[0].currentTurn === false && socket.id === currentRoom.players[0].id || currentRoom.board[cellId[4] - 1][cellId[5] - 1] != 0){
             return;
@@ -132,14 +139,14 @@ io.on('connection', (socket) => {
             currentRoom.board[cellId[4] - 1][cellId[5] - 1] = P2;
             currentRoom.timer = GAME_DURATION_SEC;
         }
-        
+
         currentRoom.moves += 1;
 
         currentRoom.players.forEach(player => {
             player.currentTurn = !player.currentTurn;
         });
 
-        if (currentRoom.board[0][0] + currentRoom.board[0][1] + currentRoom.board[0][2] === 3 || 
+        if (currentRoom.board[0][0] + currentRoom.board[0][1] + currentRoom.board[0][2] === 3 ||
             currentRoom.board[1][0] + currentRoom.board[1][1] + currentRoom.board[1][2] === 3 ||
             currentRoom.board[2][0] + currentRoom.board[2][1] + currentRoom.board[2][2] === 3 ||
             currentRoom.board[0][0] + currentRoom.board[1][0] + currentRoom.board[2][0] === 3 ||
@@ -148,18 +155,18 @@ io.on('connection', (socket) => {
             currentRoom.board[0][0] + currentRoom.board[1][1] + currentRoom.board[2][2] === 3 ||
             currentRoom.board[0][2] + currentRoom.board[1][1] + currentRoom.board[2][0] === 3 )
 
-            {
+        {
 
             currentRoom.status = 'P1';
             console.log(currentRoom.status);
-            
+
             currentRoom.players[0].wins++;
             currentRoom.players[1].loses++;
 
             currentRoom.timer = 0;
         }
 
-        else if (currentRoom.board[0][0] + currentRoom.board[0][1] + currentRoom.board[0][2] === -3 || 
+        else if (currentRoom.board[0][0] + currentRoom.board[0][1] + currentRoom.board[0][2] === -3 ||
             currentRoom.board[1][0] + currentRoom.board[1][1] + currentRoom.board[1][2] === -3 ||
             currentRoom.board[2][0] + currentRoom.board[2][1] + currentRoom.board[2][2] === -3 ||
             currentRoom.board[0][0] + currentRoom.board[1][0] + currentRoom.board[2][0] === -3 ||
@@ -167,10 +174,10 @@ io.on('connection', (socket) => {
             currentRoom.board[0][2] + currentRoom.board[1][2] + currentRoom.board[2][2] === -3 ||
             currentRoom.board[0][0] + currentRoom.board[1][1] + currentRoom.board[2][2] === -3 ||
             currentRoom.board[0][2] + currentRoom.board[1][1] + currentRoom.board[2][0] === -3 )
-            {
+        {
 
             currentRoom.status = 'P2';
-            
+
             currentRoom.players[1].wins++;
             currentRoom.players[0].loses++;
 
@@ -192,7 +199,7 @@ io.on('connection', (socket) => {
         io.to(currentRoomName).emit('updateBoardClient', currentRoom);
     })
 
-    
+
 
     socket.on('destroyRoom', (roomName) => {
         const currentRoom = findRoomByName(roomName);
@@ -214,7 +221,7 @@ io.on('connection', (socket) => {
     }
 
     function restartRoom(room) {
-        [room.players[0], room.players[1]] = [room.players[1], room.players[0]]; 
+        [room.players[0], room.players[1]] = [room.players[1], room.players[0]];
         initGame(room);
         room.board = clearBoard();
         room.isUpdated = true;

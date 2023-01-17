@@ -19,18 +19,66 @@ $(document).ready(function () {
 
 $('#connectToRoom').click(function (e) {
     e.preventDefault();
+    const playerName = $('#inputPlayerName').val();
+    if (!IsInputPlayerNameCorrect(playerName)) {
+        return
+    }
     $('#modalWindowForm').fadeIn(ANIMATION_DURATION);
 });
+
+
+socket.on('errorMessаge', (message) => {
+    $('#inputRoomError').html(message)
+})
+function IsInputRoomNameCorrect(text) {
+    if (text.length < 1) {
+        $('#inputRoomError').html("Введите имя!")
+        return false
+    }
+    if (text.length > 10) {
+        $('#inputRoomError').html("Не более 10 символов!")
+        return false
+    }
+    if (text.match(/^[^!@#<>{}()!?$*`%=]+$/i) == null) {
+        $('#inputRoomError').html("Некорректный ввод!")
+        return false
+    }
+    else {
+        $('#inputRoomError').html("")
+    }
+    return true
+}
+function  IsInputPlayerNameCorrect(text) {
+    if (text.length < 1) {
+        $('#inputPlayerError').html("Введите имя!")
+        return false
+    }
+    if (text.length > 10) {
+        $('#inputPlayerError').html("Не более 10 символов!")
+        return false
+    }
+    if (text.match(/^[^!@#<>{}()!?$*`%=]+$/i) == null) {
+        $('#inputPlayerError').html("Некорректный ввод!")
+        return false
+    }
+    else {
+        $('#inputPlayerError').html("")
+    }
+    return true
+}
 
 $('#modalBackground').click(function (e) {
     e.preventDefault();
     $('#modalWindowForm').slideUp(ANIMATION_DURATION);
 });
 
-$('#createRoom').click(function (e) { 
+$('#createRoom').click(function (e) {
     e.preventDefault();
     const playerName = $('#inputPlayerName').val();
 
+    if (!IsInputPlayerNameCorrect(playerName)) {
+        return
+    }
     room = {
         name: playerName + '',
         players: [
@@ -45,7 +93,7 @@ $('#createRoom').click(function (e) {
         ],
         status: 'idle',
         board: [
-            [0, 0, 0], 
+            [0, 0, 0],
             [0, 0, 0],
             [0, 0, 0],
         ],
@@ -59,11 +107,14 @@ $('#createRoom').click(function (e) {
     $('#modalWindow').fadeIn(ANIMATION_DURATION);
 });
 
-$('#connectToRoomModal').click(function (e) { 
+$('#connectToRoomModal').click(function (e) {
     e.preventDefault();
     const roomName = $('#inputRoomNameModal').val();
     const playerName = $('#inputPlayerName').val();
 
+    if (!IsInputRoomNameCorrect(roomName)) {
+        return
+    }
     room = {
         name: roomName + '',
         player: playerName,
@@ -79,14 +130,14 @@ function prepareRoom(room) {
 
     $('#firstPlayerName').html(room.players[0].name + ' (X)');
     $('#secondPlayerName').html(room.players[1].name + ' (O)');
-    
+
     $('#gameInfo').fadeIn(ANIMATION_DURATION);
     $('#gameCanvas').fadeIn(ANIMATION_DURATION);
 }
 
 let currentRoom;
 
-$('.game-cell').click(function (e) { 
+$('.game-cell').click(function (e) {
     e.preventDefault();
     socket.emit('userAction', currentRoom.name, this.id);
 });
@@ -103,7 +154,7 @@ function updateBoard(room) {
 
     const pathImg = 'static/images/';
     const formatImg = '.png';
-    
+
     for (let i = 1; i <= 3; i++){
         for (let j = 1; j <= 3; j++){
             let img = document.createElement('img');
@@ -121,7 +172,7 @@ function updateBoard(room) {
         }
     }
 
-    
+
 
     room.players.forEach(player => {
         if (player.currentTurn && player.id === socket.id) {
@@ -163,15 +214,15 @@ socket.on('updateBoardClient', (room) => {
             break;
         // В случае если игрок 1 побеждает
         case 'P1':
-            showModal(room.players[0].name + ' победил') 
+            showModal(room.players[0].name + ' победил')
             break;
         // В случае если игрок 2 побеждает
         case 'P2':
-            showModal(room.players[1].name + ' победил') 
+            showModal(room.players[1].name + ' победил')
             break;
         // В случае если ничья
         case 'tie':
-            showModal('ничья') 
+            showModal('ничья')
             break;
         case 'destroyed':
             location.href = '/';
@@ -189,7 +240,7 @@ socket.on('disconn', (room) => {
     socket.emit('destroyRoom', room.name);
 })
 
-$('#restartRoom').click(function (e) { 
+$('#restartRoom').click(function (e) {
     e.preventDefault();
 
     closeModal();
@@ -197,9 +248,9 @@ $('#restartRoom').click(function (e) {
     socket.emit('restartRoom', currentRoom.name);
 });
 
-$('#backToLobby').click(function (e) { 
+$('#backToLobby').click(function (e) {
     e.preventDefault();
-    
+
     closeModal();
 
     socket.emit('destroyRoom', currentRoom.name);
